@@ -15,6 +15,9 @@ const AdSchema = new schema({
     type: Number,
     required: true,
   },
+  isAvailable: {
+    type: Boolean,
+  },
   owner: {
     type: Object,
     required: true,
@@ -22,6 +25,20 @@ const AdSchema = new schema({
   date: {
     type: Date,
     default: Date.now,
+  },
+  description: {
+    type: String,
+    required: true,
+    minlength: 15,
+    maxlength: 1055,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  img: {
+    type: Array,
+    required: true,
   },
 });
 

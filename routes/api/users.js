@@ -26,7 +26,7 @@ router.delete("/:id", (req, res) => {
     .catch((err) => res.status(404).json({ success: false }));
 });
 
-// get /api/users/register
+// post /api/users/register
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
   // Check Validation
@@ -34,10 +34,10 @@ router.post("/register", (req, res) => {
     return res.status(400).json(errors);
   }
   User.findOne({
-    email: req.body.email,
+    phone: req.body.phone,
   }).then((user) => {
     if (user) {
-      errors.email = "Email already exist";
+      errors.phone = "Phone already exist";
       return res.status(400).json(errors);
     } else {
       const avatar = gravatar.url(req.body.email, {
@@ -46,7 +46,8 @@ router.post("/register", (req, res) => {
         d: "mm", //default
       });
       const newUser = new User({
-        name: req.body.name,
+        fullname: req.body.fullname,
+        phone: req.body.phone,
         email: req.body.email,
         avatar,
         password: req.body.password,
@@ -66,28 +67,34 @@ router.post("/register", (req, res) => {
   });
 });
 
-// get /api/users/login
+// post /api/users/login
 router.post("/login", (req, res) => {
   const { errors, isValid } = validateLoginInput(req.body);
   // Check Validation
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  const email = req.body.email;
+  const phone = req.body.phone;
   const password = req.body.password;
 
   //Find user by email
-  User.findOne({ email }).then((user) => {
+  User.findOne({ phone }).then((user) => {
     //check for user
     if (!user) {
-      errors.email = "User not found";
+      errors.phone = "User not found";
       return res.status(404).json(errors);
     }
     //check password
     bcrypt.compare(password, user.password).then((isMatch) => {
       if (isMatch) {
         // user matched
-        const payload = { id: user.id, name: user.name, avatar: user.avatar }; //create jwt paylooad
+        const payload = {
+          id: user.id,
+          fullname: user.fullname,
+          avatar: user.avatar,
+          phone: user.phone,
+          role: user.role,
+        }; //create jwt paylooad
 
         //sign Token
         jwt.sign(
@@ -113,8 +120,10 @@ router.get(
   (req, res) => {
     res.json({
       id: req.user.id,
-      name: req.user.name,
+      fullname: req.user.fullname,
+      phone: req.user.phone,
       email: req.user.email,
+      role: req.user.role,
     });
   }
 );

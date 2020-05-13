@@ -3,11 +3,15 @@ const schema = mongoose.Schema;
 
 // create schema
 const UserSchema = new schema({
-  name: {
+  fullname: {
     type: String,
     required: true,
   },
   email: {
+    type: String,
+    required: true,
+  },
+  phone: {
     type: String,
     required: true,
   },
@@ -21,6 +25,12 @@ const UserSchema = new schema({
   date: {
     type: Date,
     default: Date.now,
+  },
+  role: {
+    type: String,
+    required: true,
+    default: "user",
+    enum: ["user", "admin"],
   },
 });
 

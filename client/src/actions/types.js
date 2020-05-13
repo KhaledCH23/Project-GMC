@@ -6,3 +6,4 @@ export const EDIT_AD = "EDIT_AD";
 export const DELETE_AD = "DELETE_AD";
 export const GET_USERS = "GET_USERS";
 export const DELETE_USER = "DELETE_USER";
+export const TOGGLE_MODAL = "TOGGLE_MODAL";
